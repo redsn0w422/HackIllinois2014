@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<session version="1.0">
+<refactoring comment="Rename type &apos;edu.gvsu.masl.EchoprintTestActivity&apos; to &apos;RandomNameHereActivity&apos;&#x0D;&#x0A;- Original project: &apos;RandomNameHere&apos;&#x0D;&#x0A;- Original element: &apos;edu.gvsu.masl.EchoprintTestActivity&apos;&#x0D;&#x0A;- Renamed element: &apos;edu.gvsu.masl.RandomNameHereActivity&apos;&#x0D;&#x0A;- Update references to refactored element&#x0D;&#x0A;- Update textual occurrences in comments and strings" description="Rename type &apos;EchoprintTestActivity&apos;" flags="589830" id="org.eclipse.jdt.ui.rename.type" input="/src&lt;edu.gvsu.masl{EchoprintTestActivity.java[EchoprintTestActivity" matchStrategy="1" name="RandomNameHereActivity" qualified="false" references="true" similarDeclarations="false" stamp="1397284559813" textual="false" version="1.0"/>
+</session>
