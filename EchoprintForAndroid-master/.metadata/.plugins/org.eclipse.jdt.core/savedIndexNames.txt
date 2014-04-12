@@ -1,0 +1,4 @@
+INDEX VERSION 1.126+C:\Users\AnaBanana\Desktop\EchoprintForAndroid-master\.metadata\.plugins\org.eclipse.jdt.core
+2391666098.index
+3898124025.index
+207306168.index
