@@ -6,8 +6,48 @@
     <script src="https://cdn.firebase.com/js/client/1.0.11/firebase.js"></script>
     <script src="https://cdn.firebase.com/libs/angularfire/0.7.1/angularfire.min.js"></script>
     <link rel="stylesheet" type="text/css" href="https://www.firebase.com/css/example.css">
+    <style>
+    #madeby {
+      font-size: 11px;
+    }
+    html { 
+  background: url(https://farm6.staticflickr.com/5533/9279338928_5edbca964a_z.jpg) no-repeat center center fixed; 
+  -webkit-background-size: cover;
+  -moz-background-size: cover;
+  -o-background-size: cover;
+  background-size: cover;
+  background-color: rgba(0, 0, 0, 0.9);
+}
+
+body {
+  background-color: none;
+  background: none;
+  color: white;
+}
+
+*{
+  color: white;
+}
+
+h1, h2, h3, h4, h5, em{
+  color: white;
+}
+
+.overlay {
+    z-index: 1;
+    height: 100%;
+    width: 100%;
+    position: fixed;
+    overflow: auto;
+    top: 0px;
+    left: 0px;
+    background: rgba(0, 0, 0, 0.7); /*can be anything, of course*/
+}
+
+    </style>
   </head>
   <body ng-controller="MyController">
+    <div class="overlay">
     <h1>chicken connect</h1>
     <div id="usersDiv">
       <h3>connected users</h3>
@@ -16,7 +56,20 @@
     </div>
     <h3>leaderboard</h3>
     <div id="leaderboard">
-    </div>
+    </div><br/><br/><br/>
+    <a href="/RandomThing.apk">
+  <img alt="Get it on Google Play"
+       src="https://developer.android.com/images/brand/en_generic_rgb_wo_45.png" />
+</a>
+    <br/>
+    <br/>
+    <p id="madeby">
+    <i>made by <a href="mailto:yasha.mostofi@gmail.com">yasha mostofi</a>, 
+      <a href="mailto:briantruong777@gmail.com">brian truong</a>,
+      <a href="mailto:sonofthebrownguy@gmail.com">kian fotovat</a>, and 
+      <a href="mailto:stefan@stefanaleksic.com">stefan aleksic</a></i>
+      <br/>at <a href="hackillinois.org">hackillinois</a>
+    </p>
     <script>
       // constants
       var ACTIVITIES = ["20 push ups", "jump out a window", "touch other person's elbow the fastest"];
@@ -229,5 +282,6 @@
       }
 
     </script>
+  </div>
   </body>
 </html>
