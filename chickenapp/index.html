@@ -11,11 +11,11 @@
     <h1>chicken connect</h1>
     <div id="usersDiv">
       <h3>connected users</h3>
-      <div ng-repeat="user in users"><em>{{user.id}}</em>: is at {{user.lat.toFixed(3)}},{{user.lon.toFixed(3)}}</div>
+      <div ng-repeat="user in users"><em>{{user.id}}</em>: is at {{user.lat.toFixed(3)}},{{user.lon.toFixed(3)}} scored: {{user.points}}</div>
       <!-- <div ng-repeat="(key, value) in users">{{key}}: is at {{value['lat']}},{{value['lon']}}</div> -->     
     </div>
+    <h3>leaderboard</h3>
     <div id="leaderboard">
-      <h3>leaderboard</h3>
     </div>
     <script>
       // constants
@@ -39,7 +39,7 @@
           for (var userKey in cleanUsers)
           {
             var user = cleanUsers[userKey];
-            usersArray[index] = new User (user['id'], user['lat'], user['lon'], user['points']);
+            usersArray[index] = new User (user['id'], user['lat'], user['lon'], user['points'], user['activity']);
             index++;
           }
 
@@ -64,27 +64,54 @@
               // console.log(activity);
               child.$update({'activity':activity});
             }
-            else if (t_activity === "success")
+            if (t_activity === "success")
             {
+              var id = usersArray[i].getKey();
               var child = $scope.users.$child(id);
               var newPoints = usersArray[i].getPoints() + 2;
-              child.$update({'points':newPoints});
+              child.$update({'activity':'false','points':newPoints});
             }
-            else if(t_activity === "fail")
+            if (t_activity === "fail")
             {
+              var id = usersArray[i].getKey();
               var child = $scope.users.$child(id);
               var newPoints = usersArray[i].getPoints() - 1;
-              child.$update({'points':newPoints});
+              child.$update({'activity':'false','points':newPoints});
             }
           }
 
-          var sorted_users = usersArray.sort();
+          var sorted_users = [];
+          for (var i=0; i<usersArray.length; i++)
+          {
+            sorted_users[i] = usersArray[i];
+          }
+
+          for (var i=0; i<sorted_users.length; i++)
+          {
+            var max_user = sorted_users[i];
+            var max_index = i;
+            for (var j = i+1; j<sorted_users.length; j++)
+            {
+              if (sorted_users[j].getPoints() > max_user.getPoints())
+              {
+                max_index = j;
+                max_user = sorted_users[j];
+              }
+            }
+            var temp = sorted_users[i];
+            sorted_users[i] = sorted_users[max_index];
+            sorted_users[max_index] = temp;
+          }
+
           var leaderboard = document.getElementById("leaderboard");
           var orig_html = leaderboard.innerHTML;
-          // for (user in sorted_users)
-          // {
-
-          // }
+          var new_html = ''
+          for (var i=0; i<sorted_users.length; i++)
+          {
+            var string = sorted_users[i].getKey() + " has a score of " + sorted_users[i].getPoints() + "</br>";
+            new_html += string;
+          }
+          leaderboard.innerHTML = new_html;
         });
       }
       
@@ -92,13 +119,13 @@
       //ref.update({key : 'phone_number', etc.});
       
 
-      function User (key, lat, lon, points)
+      function User (key, lat, lon, points, activity)
       {
         this.key = key;
         this.lat = lat;
         this.lon = lon;
         this.points = points;
-        this.activity = "false";
+        this.activity = activity;
         this.close_users = [];
         this.num_close_users = 0;
       }
