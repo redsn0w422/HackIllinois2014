@@ -1,0 +1,47 @@
+<html ng-app="myapp">
+	<head>
+		<script src='https://cdn.firebase.com/js/client/1.0.11/firebase.js'></script>
+		<script src='https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.2.6/angular.min.js'></script>
+		<script src='https://cdn.firebase.com/libs/angularfire/0.7.1/angularfire.min.js'></script>
+		<link rel="stylesheet" href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.10.4/themes/smoothness/jquery-ui.css" />
+		<script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.10.4/jquery-ui.min.js"></script>
+		<link rel="stylesheet" href="https://ajax.googleapis.com/ajax/libs/jquerymobile/1.4.2/jquery.mobile.min.css" />
+		<script src="https://ajax.googleapis.com/ajax/libs/jquerymobile/1.4.2/jquery.mobile.min.js"></script>
+	</head>
+	<body>
+			<input type="text" placeholder="Enter your phone number" id="phone"/>
+			<div id="loc_info"></div>
+			<div id="activity"></div>
+			<button type="submit" value="Scan" id="scan"/>
+	</body>
+	<script>
+	$(document).ready(function()
+	{
+		var ref = new Firebase('https://chickenapp.firebaseio.com/');
+		var x = document.getElementById("loc_info");
+		function getLocation()
+		{
+			if (navigator.geolocation)
+			{
+				navigator.geolocation.getCurrentPosition(showPosition);
+			}
+			else
+			{
+				x.innerHTML="Geolocation is not supported by this browser.";
+			}
+		}
+		//function showPosition(position)
+		//{
+		//	x.innerHTML="Latitude: " + position.coords.latitude + 
+		//	"<br>Longitude: " + position.coords.longitude;	
+		//}
+		$("#scan").click(function()
+		{
+			var phone = $("#phone").val();
+			navigator.geolocation.getCurrentPosition(showPosition);
+			ref.set({'activity':"false",'id':phone,'lat':position.coords.latitude,'lon':position.coords.longitude});
+		})
+	});
+	</script>
+</html>
+	  
