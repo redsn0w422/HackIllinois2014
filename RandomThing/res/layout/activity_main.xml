@@ -23,13 +23,24 @@
             android:text="Didn&apos;t find anyone!"
             android:textSize="20sp" />
         
+        <TextView
+            android:id="@+id/daOtherTextView"
+            android:layout_width="fill_parent" 
+    		android:layout_height="wrap_content"
+    		android:layout_above="@+id/daLinearLayout" 
+    		android:gravity="center"
+            android:text="Did you all participate?"
+            android:textSize="20sp" />
+        
         <LinearLayout 
+            android:id="@+id/daLinearLayout"
             android:layout_width = "match_parent"
             android:layout_height = "wrap_content"
             android:layout_alignParentBottom="true"
             >
             
                 <Button
+                    android:id="@+id/noButton"
                     android:layout_weight="0.5"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -38,7 +49,7 @@
                     android:enabled="false"/>
                 
                   <Button
-                      
+                    android:id="@+id/yesButton"
                     android:layout_weight="0.5"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"

@@ -1,5 +1,6 @@
 package com.thing.randomthing;
 
+import java.util.Map;
 import java.util.Random;
 
 import android.content.Context;
@@ -28,7 +29,9 @@ public class MainActivity extends ActionBarActivity {
 	  TextView lon;
 	  Firebase fb;
       int x = 0;
-      int y = 0; 
+      int y = 0;
+      Button noButton;
+      Button yesButton;
 	  
     @Override 
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,13 +40,8 @@ public class MainActivity extends ActionBarActivity {
 
         
         fb = new Firebase("https://chickenapp.firebaseIO.com");
-        
-        
-        
-        
-        
-        
-        
+        noButton = (Button)findViewById(R.id.noButton);
+        yesButton = (Button)findViewById(R.id.yesButton);
         childListener();
         
         
@@ -75,22 +73,25 @@ public class MainActivity extends ActionBarActivity {
 				
 				//String value = (String)map.get("activity");
 				
-				Object input = snap.getValue();
-				if(input instanceof String){
-					String inputString = (String)input;
+				Map<String, Object> map = (Map<String, Object>) snap.getValue();
+				String inputString = (String) map.get("activity");
 					
 					
-					if(inputString.equals("fail")){
-						//TODO: DISPLAY SOMEONE SAID NO!
-					}
-					else if(!inputString.equals("false")){
-						//TODO: TEXT VIEW
-						
-						((TextView)findViewById(R.id.daTextView)).setText(inputString);
-					}
+				if(inputString.equals("fail")){
+					//TODO: DISPLAY SOMEONE SAID NO!
+					((TextView)findViewById(R.id.daTextView)).setText("Some jerk said no!");
+					noButton.setEnabled(false);
+					yesButton.setEnabled(false);
+				}
+				else if(!inputString.equals("false")){
+					//TODO: TEXT VIEW
+					
+					((TextView)findViewById(R.id.daTextView)).setText(inputString);
+					noButton.setEnabled(true);
+					yesButton.setEnabled(true);
+				}
 		
 					
-				}
 				
 				
 				
@@ -120,13 +121,21 @@ public class MainActivity extends ActionBarActivity {
           Random rnd = new Random();
           
           String phoneNumber = rMgr.getLine1Number();
-          fb.getRoot().child(phoneNumber).setValue(new AndroidPhoneDevice("false",tempArray[rnd.nextInt(tempArray.length)],
+          fb.getRoot().child(phoneNumber).setValue(new AndroidPhoneDevice(phoneNumber, "false",tempArray[rnd.nextInt(tempArray.length)],
         		  tempArray[rnd.nextInt(tempArray.length)]));
-          
-          
-          
-    	  
+
       }
-       
+            
+      public void pressedNo(View v){
+    	  noButton.setEnabled(false);
+    	  yesButton.setEnabled(false);
+    	  ((TextView)findViewById(R.id.daOtherTextView)).setText("Wow, you are a jerk");
+      }
+      
+      public void pressedYes(View v){
+    	  noButton.setEnabled(false);
+    	  yesButton.setEnabled(false);
+    	  ((TextView)findViewById(R.id.daOtherTextView)).setText("Wow, much friendship, such teamwork!");
+      }
    
 }
