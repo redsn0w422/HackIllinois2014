@@ -1,6 +1,5 @@
 package com.thing.randomthing;
 
-import java.util.Map;
 import java.util.Random;
 
 import android.content.Context;
@@ -12,10 +11,10 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
-import com.firebase.client.ChildEventListener;
 import com.firebase.client.DataSnapshot;
 import com.firebase.client.Firebase;
 import com.firebase.client.FirebaseError;
+import com.firebase.client.ValueEventListener;
 
 
 
@@ -32,14 +31,18 @@ public class MainActivity extends ActionBarActivity {
       int y = 0;
       Button noButton;
       Button yesButton;
+      String phoneNumber;
 	  
     @Override 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main); 
 
+  	    TelephonyManager rMgr = (TelephonyManager)this.getSystemService(Context.TELEPHONY_SERVICE);
+        phoneNumber = rMgr.getLine1Number();
+
         
-        fb = new Firebase("https://chickenapp.firebaseIO.com");
+        fb = new Firebase("https://chickenapp.firebaseIO.com").child(phoneNumber);
         noButton = (Button)findViewById(R.id.noButton);
         yesButton = (Button)findViewById(R.id.yesButton);
         childListener();
@@ -49,22 +52,12 @@ public class MainActivity extends ActionBarActivity {
     }
     
     private void childListener(){
-    	fb.addChildEventListener(new ChildEventListener(){
+    	fb.child("activity").addValueEventListener(new ValueEventListener(){
+
+		
 
 			@Override
-			public void onCancelled(FirebaseError arg0) {
-				// TODO Auto-generated method stub
-				
-			}
-
-			@Override
-			public void onChildAdded(DataSnapshot arg0, String arg1) {
-				// TODO Auto-generated method stub
-				
-			}
-
-			@Override
-			public void onChildChanged(DataSnapshot snap, String txt) {
+			public void onDataChange(DataSnapshot snap) {
 				
 				
 				//List<Map<String,Object>> s =  (List<Map<String,Object>>)
@@ -72,9 +65,8 @@ public class MainActivity extends ActionBarActivity {
 				//Map<String,Object> map = s.get(0);
 				
 				//String value = (String)map.get("activity");
-				
-				Map<String, Object> map = (Map<String, Object>) snap.getValue();
-				String inputString = (String) map.get("activity");
+				String inputString = "";
+				inputString = (String) snap.getValue();
 					
 					
 				if(inputString.equals("fail")){
@@ -98,16 +90,12 @@ public class MainActivity extends ActionBarActivity {
 			}
 
 			@Override
-			public void onChildMoved(DataSnapshot arg0, String arg1) {
+			public void onCancelled(FirebaseError arg0) {
 				// TODO Auto-generated method stub
 				
 			}
 
-			@Override
-			public void onChildRemoved(DataSnapshot arg0) {
-				// TODO Auto-generated method stub
-				
-			}
+	
         	
         });
     }
@@ -117,11 +105,8 @@ public class MainActivity extends ActionBarActivity {
     	  
     	//  b.setEnabled(false);
     	  
-    	  TelephonyManager rMgr = (TelephonyManager)this.getSystemService(Context.TELEPHONY_SERVICE);
           Random rnd = new Random();
-          
-          String phoneNumber = rMgr.getLine1Number();
-          fb.getRoot().child(phoneNumber).setValue(new AndroidPhoneDevice(phoneNumber, "false",tempArray[rnd.nextInt(tempArray.length)],
+          fb.setValue(new AndroidPhoneDevice(phoneNumber, "false",tempArray[rnd.nextInt(tempArray.length)],
         		  tempArray[rnd.nextInt(tempArray.length)]));
 
       }
@@ -129,7 +114,8 @@ public class MainActivity extends ActionBarActivity {
       public void pressedNo(View v){
     	  noButton.setEnabled(false);
     	  yesButton.setEnabled(false);
-    	  ((TextView)findViewById(R.id.daOtherTextView)).setText("Wow, you are a jerk");
+    	  fb.child("activity").setValue("fail");
+    	  ((TextView)findViewById(R.id.daOtherTextView)).setText("Wow, you are a jerk!");
       }
       
       public void pressedYes(View v){
