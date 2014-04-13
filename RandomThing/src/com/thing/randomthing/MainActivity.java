@@ -60,7 +60,8 @@ public class MainActivity extends ActionBarActivity {
 			public void run() {
 				Location loc = mLocationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
 				Log.d("locthingy", "LocTimer:" + loc);
-				fb.setValue(new AndroidPhoneDevice(phoneNumber, "false", loc.getLatitude(), loc.getLongitude()));
+	    	    fb.child("lat").setValue(loc.getLatitude());
+	    	    fb.child("lon").setValue(loc.getLongitude());
 			}
     	}, 0, 1000);
         
@@ -133,10 +134,10 @@ public class MainActivity extends ActionBarActivity {
     }
         
       public void clickedDaButton(View v){
-    	  Button b = (Button)v;
     	  Location loc = mLocationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
     	  Log.d("locthingy", "LocTimer:" + loc);
-    	  fb.setValue(new AndroidPhoneDevice(phoneNumber, "false", loc.getLatitude(), loc.getLongitude()));
+    	  fb.child("lat").setValue(loc.getLatitude());
+    	  fb.child("lon").setValue(loc.getLongitude());
     	//  b.setEnabled(false);
     	  /*
           Random rnd = new Random();
