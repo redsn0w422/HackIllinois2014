@@ -2,62 +2,66 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical" 
-    android:padding = "10dp">
+    android:orientation="vertical"
+    android:padding="10dp" >
 
-    
-    
-    <Button 
+    <Button
+        android:id="@+id/button1"
         android:layout_width="match_parent"
-        android:text = "Scan!"
-        android:layout_height = "wrap_content"
-        android:onClick = "clickedDaButton"
+        android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
-        android:layout_centerInParent="true"/>
+        android:layout_centerInParent="true"
+        android:onClick="clickedDaButton"
+        android:text="Scan!" />
 
-        <TextView
-            android:id="@+id/daTextView"
-            android:layout_width="fill_parent" 
-    		android:layout_height="fill_parent" 
-    		android:gravity="center"
-            android:text="Didn&apos;t find anyone!"
-            android:textSize="20sp" />
-        
-        <TextView
-            android:id="@+id/daOtherTextView"
-            android:layout_width="fill_parent" 
-    		android:layout_height="wrap_content"
-    		android:layout_above="@+id/daLinearLayout" 
-    		android:gravity="center"
-            android:text="Did you all participate?"
-            android:textSize="20sp" />
-        
-        <LinearLayout 
-            android:id="@+id/daLinearLayout"
-            android:layout_width = "match_parent"
-            android:layout_height = "wrap_content"
-            android:layout_alignParentBottom="true"
-            >
-            
-                <Button
-                    android:id="@+id/noButton"
-                    android:layout_weight="0.5"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:onClick="pressedNo"
-                    android:text="No!" 
-                    android:enabled="false"/>
-                
-                  <Button
-                    android:id="@+id/yesButton"
-                    android:layout_weight="0.5"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:onClick="pressedYes"
-                    android:text="Yes!"
-                    android:enabled="false" />
-            
-        </LinearLayout>
+    <TextView
+        android:id="@+id/daTextView"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:gravity="center"
+        android:text="Didn&apos;t find anyone!"
+        android:textSize="20sp" />
 
+    <TextView
+        android:id="@+id/daOtherTextView"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/daLinearLayout"
+        android:gravity="center"
+        android:text="Did you all participate?"
+        android:textSize="20sp" />
 
-</RelativeLayout> 
+    <LinearLayout
+        android:id="@+id/daLinearLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true" >
+
+        <Button
+            android:id="@+id/noButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.5"
+            android:enabled="false"
+            android:onClick="pressedNo"
+            android:text="No!" />
+
+        <Button
+            android:id="@+id/yesButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.5"
+            android:enabled="false"
+            android:onClick="pressedYes"
+            android:text="Yes!" />
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/textPoints"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/button1"
+        android:layout_centerHorizontal="true"
+        android:text="0 Points" />
+
+</RelativeLayout>

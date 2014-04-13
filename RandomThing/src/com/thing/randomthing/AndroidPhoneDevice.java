@@ -5,11 +5,13 @@ public class AndroidPhoneDevice {
 	private String activity;
 	private double latitude;
 	private double longitude;
-	public AndroidPhoneDevice(String id, String activity, double latitude, double longitude){
+	private int points;
+	public AndroidPhoneDevice(String id, String activity, double latitude, double longitude, int points){
 		this.id = id;
 		this.activity = activity;
 		this.latitude = latitude;
 		this.longitude = longitude;
+		this.points = points;
 	}
 	
 	public String getId(){
@@ -23,5 +25,8 @@ public class AndroidPhoneDevice {
 	}
 	public double getLon(){
 		return longitude;
+	}
+	public double getPoints(){
+		return points;
 	}
 }

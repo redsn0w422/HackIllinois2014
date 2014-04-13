@@ -48,7 +48,7 @@ public class MainActivity extends ActionBarActivity {
 
         
         fb = (new Firebase("https://chickenapp.firebaseIO.com")).child(phoneNumber);
-        fb.setValue(new AndroidPhoneDevice(phoneNumber, "false", 0, 0));
+        fb.setValue(new AndroidPhoneDevice(phoneNumber, "false", 0, 0, 0));
         noButton = (Button)findViewById(R.id.noButton);
         yesButton = (Button)findViewById(R.id.yesButton);
         childListener();
@@ -61,8 +61,8 @@ public class MainActivity extends ActionBarActivity {
 			public void run() {
 				Location loc = mLocationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
 				Log.d("locthingy", "LocTimer:" + loc);
-	    	    fb.child("lat").setValue(loc.getLatitude());
-	    	    fb.child("lon").setValue(loc.getLongitude());
+	    	    fb.child("lat").setValue((double) Math.round(loc.getLatitude()*10000)/10000);
+	    	    fb.child("lon").setValue((double) Math.round(loc.getLongitude()*10000)/10000);
 			}
     	}, 0, 1000);
         
@@ -84,18 +84,8 @@ public class MainActivity extends ActionBarActivity {
     
     private void childListener(){
     	fb.child("activity").addValueEventListener(new ValueEventListener(){
-
-		
-
-			@Override
+    		@Override
 			public void onDataChange(DataSnapshot snap) {
-				
-				
-				//List<Map<String,Object>> s =  (List<Map<String,Object>>)
-				
-				//Map<String,Object> map = s.get(0);
-				
-				//String value = (String)map.get("activity");
 				String inputString = "";
 				inputString = (String) snap.getValue();
 					
@@ -116,29 +106,31 @@ public class MainActivity extends ActionBarActivity {
 					noButton.setEnabled(true);
 					yesButton.setEnabled(true);
 				}
-		
-					
-				
-				
-				
 			}
 
 			@Override
-			public void onCancelled(FirebaseError arg0) {
-				// TODO Auto-generated method stub
-				
-			}
-
-	
-        	
+			public void onCancelled(FirebaseError arg0) {}
         });
+    	
+    	fb.child("points").addValueEventListener(new ValueEventListener() {
+			
+			@Override
+			public void onDataChange(DataSnapshot arg0) {
+				if (arg0 != null)
+					((TextView)findViewById(R.id.textPoints)).setText(arg0.getValue() + " points");
+			}
+			
+			@Override
+			public void onCancelled(FirebaseError arg0) {
+			}
+		});
     }
         
       public void clickedDaButton(View v){
     	  Location loc = mLocationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
     	  Log.d("locthingy", "LocTimer:" + loc);
-    	  fb.child("lat").setValue(loc.getLatitude());
-    	  fb.child("lon").setValue(loc.getLongitude());
+    	  fb.child("lat").setValue((double)Math.round(loc.getLatitude()*10000)/10000);
+    	  fb.child("lon").setValue((double)Math.round(loc.getLongitude()*10000)/10000);
     	//  b.setEnabled(false);
     	  /*
           Random rnd = new Random();
