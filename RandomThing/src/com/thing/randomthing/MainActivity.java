@@ -48,6 +48,7 @@ public class MainActivity extends ActionBarActivity {
 
         
         fb = (new Firebase("https://chickenapp.firebaseIO.com")).child(phoneNumber);
+        fb.setValue(new AndroidPhoneDevice(phoneNumber, "false", 0, 0));
         noButton = (Button)findViewById(R.id.noButton);
         yesButton = (Button)findViewById(R.id.yesButton);
         childListener();
