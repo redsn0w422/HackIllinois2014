@@ -1,12 +1,17 @@
 package com.thing.randomthing;
 
 import java.util.Random;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import android.content.Context;
+import android.location.Location;
+import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
 import android.telephony.TelephonyManager;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
@@ -46,9 +51,33 @@ public class MainActivity extends ActionBarActivity {
         noButton = (Button)findViewById(R.id.noButton);
         yesButton = (Button)findViewById(R.id.yesButton);
         childListener();
+
+  	  	mLocationManager = (LocationManager) this.getSystemService(Context.LOCATION_SERVICE);
         
+        Timer time = new Timer();
+        time.schedule( new TimerTask() {
+			@Override
+			public void run() {
+				Location loc = mLocationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+				Log.d("locthingy", "LocTimer:" + loc);
+				fb.setValue(new AndroidPhoneDevice(phoneNumber, "false", loc.getLatitude(), loc.getLongitude()));
+			}
+    	}, 0, 1000);
         
-        
+        mLocationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, new LocationListener() {
+			@Override
+			public void onLocationChanged(Location location) {
+			}
+			@Override
+			public void onProviderDisabled(String provider) {
+			}
+			@Override
+			public void onProviderEnabled(String provider) {
+			}
+			@Override
+			public void onStatusChanged(String provider, int status,
+					Bundle extras) {}
+        });
     }
     
     private void childListener(){
@@ -105,12 +134,15 @@ public class MainActivity extends ActionBarActivity {
         
       public void clickedDaButton(View v){
     	  Button b = (Button)v;
-    	  
+    	  Location loc = mLocationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+    	  Log.d("locthingy", "LocTimer:" + loc);
+    	  fb.setValue(new AndroidPhoneDevice(phoneNumber, "false", loc.getLatitude(), loc.getLongitude()));
     	//  b.setEnabled(false);
-    	  
+    	  /*
           Random rnd = new Random();
           fb.setValue(new AndroidPhoneDevice(phoneNumber, "false",tempArray[rnd.nextInt(tempArray.length)],
         		  tempArray[rnd.nextInt(tempArray.length)]));
+		  */
 
       }
             
@@ -127,5 +159,4 @@ public class MainActivity extends ActionBarActivity {
     	  fb.child("activity").setValue("success");
     	  ((TextView)findViewById(R.id.daOtherTextView)).setText("Wow, much friendship, such teamwork!");
       }
-   
 }
