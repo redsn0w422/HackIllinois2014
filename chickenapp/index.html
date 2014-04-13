@@ -1,0 +1,205 @@
+<!doctype html>
+<html ng-app="myapp">
+  <head>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.2.6/angular.min.js"></script>
+    <script src="https://cdn.firebase.com/js/client/1.0.11/firebase.js"></script>
+    <script src="https://cdn.firebase.com/libs/angularfire/0.7.1/angularfire.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="https://www.firebase.com/css/example.css">
+  </head>
+  <body ng-controller="MyController">
+    <div id="usersDiv">
+      <div ng-repeat="user in users"><em>{{user.id}}</em>: is at {{user.lat}},{{user.lon}}</div>
+      <!-- <div ng-repeat="(key, value) in users">{{key}}: is at {{value['lat']}},{{value['lon']}}</div> -->     
+    </div>
+    <div id="pairsDiv"><p>asdf</p></div>
+    <script>
+      // constants
+      var ACTIVITIES = ["20 push ups", "jump out a window", "touch other person's elbow the fastest"];
+
+
+      var app = angular.module("myapp", ["firebase"]);
+      var usersArray = [];
+
+      function MyController($scope, $firebase) 
+      {
+        var ref = new Firebase("https://chickenapp.firebaseio.com/");
+        $firebase(ref).$bind($scope, 'users');
+
+        $scope.$watch('users', function () 
+        {
+          var index = 0;
+
+          var cleanUsers = angular.fromJson(angular.toJson($scope.users));
+
+
+          for (var userKey in cleanUsers)
+          {
+            var user = cleanUsers[userKey];
+            usersArray[index] = new User (user['id'], user['lat'], user['lon'], user['points']);
+            index++;
+          }
+
+          for (var i=0; i<usersArray.length; i++)
+          {
+            usersArray[i].checkUsers();
+          }
+
+          var activity_index = (Math.random() * ACTIVITIES.length) | 0;
+
+          for (var i=0; i<usersArray.length; i++)
+          {
+            if (usersArray[i].hasClose())
+            {
+              var t_activity = usersArray[i].getActivity();
+              if (t_activity === "false")
+              {
+                var activity = ACTIVITIES[activity_index];
+                var id = usersArray[i].getKey();
+                var lat = usersArray[i].getLat();
+                var lon = usersArray[i].getLon();
+                var child = $scope.users.$child(id);
+                // console.log(id);
+                // console.log(activity);
+                child.$update({'activity':activity});
+              }
+              else if (t_activity === "success")
+              {
+                if (usersArray[i].checkSuccessClose())
+                {
+                  var child = $scope.users.$child(id);
+                  var newPoints = usersArray[i].getPoints() + 2;
+                  child.$update({'points':newPoints});
+                }
+              }
+              else if(t_activity === "fail")
+              {
+
+              }
+            }
+          }
+
+        });
+      }
+      
+
+      //ref.update({key : 'phone_number', etc.});
+      
+
+      function User (key, lat, lon, points)
+      {
+        this.key = key;
+        this.lat = lat;
+        this.lon = lon;
+        this.points = points;
+        this.activity = "false";
+        this.close_users = [];
+        this.num_close_users = 0;
+      }
+
+      User.prototype.getLat = function ()
+      {
+        return this.lat;
+      }
+
+      User.prototype.getActivity = function ()
+      {
+        return this.activity;
+      }
+
+      User.prototype.getLon = function ()
+      {
+        return this.lon;
+      }
+
+      User.prototype.getKey = function ()
+      {
+        return this.key;
+      }
+
+      User.prototype.getPoints = function ()
+      {
+        return this.points;
+      }
+
+      User.prototype.checkSuccessClose = function ()
+      {
+        for (var close in this.close_users)
+        {
+          if (close.getActivity() != "success")
+          {
+            return false;
+          }
+          return true;
+        }
+      }
+
+      User.prototype.checkFailClose = function ()
+      {
+        for (var close in this.close_users)
+        {
+          if (close.getActivity() != "fail")
+          {
+            return false;
+          }
+          return true;
+        }
+      }
+
+      User.prototype.close_lat = function (latCheck)
+      {
+        if (Math.abs(latCheck - this.lat) < .5)
+        {
+          return true;
+        }
+        return false;
+      }
+
+      User.prototype.close_lon = function (lonCheck)
+      {
+        if (Math.abs(lonCheck - this.lon) < .5)
+        {
+          return true;
+        }
+        return false;
+      }
+
+      User.prototype.hasClose = function ()
+      {
+        if (this.close_users.length > 0)
+        {
+          return true;
+        }
+        return false;
+      }
+
+      User.prototype.checkUsers = function ()
+      {
+
+        this.close_users = [];
+        this.num_close_users = 0;
+        for (var i=0; i<usersArray.length; i++)
+        {
+          var t_lat = usersArray[i].getLat();
+          var t_lon = usersArray[i].getLon();
+          var t_key = usersArray[i].getKey();
+          if (this.key != t_key)
+          {
+            if (this.close_lat(t_lat) && this.close_lon(t_lon))
+            {
+              this.close_users[this.num_close_users]=usersArray[i];
+              this.num_close_users++;
+            }
+          }
+
+        }
+      }
+
+      var new_pairsDiv = '';
+      for (var i=0; i<usersArray.length; i++)
+      {
+         new_pairsDiv += usersArray[i];
+      }
+      document.getElementById("pairsDiv").innerHTML = new_pairsDiv;
+    </script>
+  </body>
+</html>
