@@ -1,0 +1,81 @@
+<html>
+	<head>
+	<title>chicken connect mobile</title>
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0"/>
+
+	<!--
+	<script src='https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.2.6/angular.min.js'></script>
+    <script src='https://cdn.firebase.com/libs/angularfire/0.7.1/angularfire.min.js'></script>
+-->
+
+    <script src='https://cdn.firebase.com/js/client/1.0.11/firebase.js'></script>
+
+
+	<script type="text/javascript" src="js/jquery.js"></script>
+	<link rel="stylesheet" type="text/css" href="https://www.firebase.com/css/example.css">
+	<style>
+	#scan {
+		width: 50px;
+		height: 20px;
+		padding: 5px;
+	}
+	</style>
+	</head>
+	<body>
+			<h1>chicken connect</h1>
+			<input type="text" placeholder="Enter your phone number" id="phone"/>
+			<div id="loc_info"></div>
+			<div id="activity"></div>
+			<button type="button" id="scan" onclick="getLocation()">Scan</button>
+	</body>
+	<script>
+	var ref = new Firebase('https://chickenapp.firebaseio.com/');
+	// var scanButton = document.getElementById("scan");
+    //var app = angular.module("myapp", ["firebase"]);
+
+    var x = document.getElementById("loc_info");
+	var button = document.getElementById("scan");
+
+	function getLocation()
+	{
+		if (navigator.geolocation)
+		{
+			navigator.geolocation.getCurrentPosition(showPosition);
+		}
+		else
+		{
+			x.innerHTML="Geolocation is not supported by this browser.";
+		}
+	}
+
+	function showPosition(position)
+	{
+		var lat = position.coords.latitude;
+		var lon = position.coords.longitude;
+		x.innerHTML="Latitude: " + position.coords.latitude.toFixed(3) + 
+		"<br>Longitude: " + position.coords.longitude.toFixed(3);	
+		saveToFirebase(lat, lon);
+	}
+
+	function saveToFirebase(lat, lon)
+	{
+		var phone = document.getElementById('phone').value;
+		var child = ref.child(phone);
+		// var child = $scope.users.$child(phone);
+		console.log(child);
+	    child.set({'activity':"false",'id':phone,'lat':lat,'lon':lon, 'points':0});
+		//ref.set({phone: {'activity':"false",'id':phone,'lat':lat,'lon':lon}});
+	}
+	
+	// function MyController($scope, $firebase) 
+	// {
+	// 	var ref = new Firebase('https://chickenapp.firebaseio.com/');
+	// 	$scope.users = $firebase(ref);
+
+	// 	//scanButton.onclick = function()
+		
+	// }
+	</script>
+	
+</html>
+	  
