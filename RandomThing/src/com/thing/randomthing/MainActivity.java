@@ -19,19 +19,19 @@ import com.firebase.client.ValueEventListener;
 
 
 public class MainActivity extends ActionBarActivity {
-	  private LocationManager mLocationManager;
-	  private String provider;
-	  private String UNIQUE_ID;
-	  public static final String PREFS_NAME = "thePrefs";
-	  public int[] tempArray = {41,24,25,15,6,8,74,51};
-	  TextView lat;
-	  TextView lon;
-	  Firebase fb;
-      int x = 0;
-      int y = 0;
-      Button noButton;
-      Button yesButton;
-      String phoneNumber;
+	private LocationManager mLocationManager;
+  	private String provider;
+  	private String UNIQUE_ID;
+  	public static final String PREFS_NAME = "thePrefs";
+  	public int[] tempArray = {41,24,25,15,6,8,74,51};
+  	TextView lat;
+  	TextView lon;
+  	Firebase fb;
+    int x = 0;
+    int y = 0;
+    Button noButton;
+    Button yesButton;
+    String phoneNumber;
 	  
     @Override 
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,7 +42,7 @@ public class MainActivity extends ActionBarActivity {
         phoneNumber = rMgr.getLine1Number();
 
         
-        fb = new Firebase("https://chickenapp.firebaseIO.com").child(phoneNumber);
+        fb = (new Firebase("https://chickenapp.firebaseIO.com")).child(phoneNumber);
         noButton = (Button)findViewById(R.id.noButton);
         yesButton = (Button)findViewById(R.id.yesButton);
         childListener();
@@ -68,17 +68,20 @@ public class MainActivity extends ActionBarActivity {
 				String inputString = "";
 				inputString = (String) snap.getValue();
 					
-					
-				if(inputString.equals("fail")){
+				if (inputString == null){
+					return;
+				}
+				else if("otherfail".equals(inputString)){
 					//TODO: DISPLAY SOMEONE SAID NO!
 					((TextView)findViewById(R.id.daTextView)).setText("Some jerk said no!");
 					noButton.setEnabled(false);
 					yesButton.setEnabled(false);
 				}
-				else if(!inputString.equals("false")){
+				else if(!("false".equals(inputString) || "success".equals(inputString) || "fail".equals(inputString))){
 					//TODO: TEXT VIEW
 					
 					((TextView)findViewById(R.id.daTextView)).setText(inputString);
+					((TextView)findViewById(R.id.daOtherTextView)).setText("Did you all participate?");
 					noButton.setEnabled(true);
 					yesButton.setEnabled(true);
 				}
@@ -121,6 +124,7 @@ public class MainActivity extends ActionBarActivity {
       public void pressedYes(View v){
     	  noButton.setEnabled(false);
     	  yesButton.setEnabled(false);
+    	  fb.child("activity").setValue("success");
     	  ((TextView)findViewById(R.id.daOtherTextView)).setText("Wow, much friendship, such teamwork!");
       }
    
